@@ -3,154 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mini Game Nhậu 2 Vòng Quay (Fixed)</title>
+    <title>Đệ Nhất Tửu Vương - Bản Full Ổn Định</title>
     <style>
-        :root {
-            --gold: #FFD700;
-            --red: #e74c3c;
-            --blue: #3498db;
-            --dark-bg: #121212;
-            --panel-bg: #1e1e1e;
-        }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--dark-bg);
+            background-color: #0d0d0d;
             color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            touch-action: manipulation; /* Ngăn zoom trên mobile */
         }
 
         h1 {
-            font-size: 1.8rem;
-            margin: 20px 0;
-            color: var(--gold);
+            color: #ffde00;
+            font-size: 1.5rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(255, 222, 0, 0.5);
         }
 
-        .game-container {
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
+            gap: 25px;
             width: 100%;
-            max-width: 800px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .wheel-wrapper {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            max-width: 90vw;
-            max-height: 90vw;
         }
 
         .wheel-box {
-            width: 100%;
-            height: 100%;
             position: relative;
-            border-radius: 50%;
-            border: 8px solid #2c3e50;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            overflow: hidden;
+            width: 320px;
+            height: 320px;
         }
 
         canvas {
             width: 100%;
             height: 100%;
-            display: block;
-            /* Thời gian quay là 5 giây với hiệu ứng chậm dần */
-            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
+            background-color: #222; /* Màu nền dự phòng */
         }
 
         .pointer {
             position: absolute;
-            top: -25px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
-            height: 50px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='%23ffffff' d='M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0s192 86 192 192z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: center bottom;
-            background-size: contain;
+            width: 30px;
+            height: 35px;
+            background: white;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
             z-index: 10;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
 
-        .wheel-label {
-            margin-top: 15px;
+        .label {
+            margin-top: 10px;
+            color: #ffde00;
             font-weight: bold;
-            color: var(--gold);
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 1.1rem;
-            text-align: center;
         }
 
-        #result-panel {
+        #result-display {
             margin-top: 30px;
-            padding: 20px;
-            border-radius: 15px;
-            background: var(--panel-bg);
-            border: 2px solid #333;
+            background: #1a1a1a;
+            border: 1px solid #333;
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
             min-height: 80px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        #final-text {
-            font-size: 1.4rem;
-            line-height: 1.6;
-        }
+        .res-name { color: #3498db; font-size: 1.5rem; font-weight: bold; }
+        .res-gift { color: #e74c3c; font-size: 1.8rem; font-weight: bold; margin-top: 5px; }
 
-        .waiting { color: #bdc3c7; font-style: italic; }
-        .highlight-name { color: var(--blue); font-weight: 900; font-size: 1.6rem; }
-        .highlight-gift { color: var(--red); font-weight: 900; font-size: 1.8rem; display: block; margin-top: 5px; }
-
-        button#spinBtn {
-            margin: 40px 0;
-            padding: 15px 60px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(to bottom, #FFD700, #E6C200);
-            color: #1a1a1a;
+        #spinBtn {
+            margin: 30px 0;
+            background: linear-gradient(180deg, #ffde00 0%, #e6c200 100%);
+            color: #000;
             border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3), inset 0 2px 3px rgba(255,255,255,0.4);
-            transition: transform 0.2s, filter 0.2s;
-            outline: none;
+            box-shadow: 0 5px 15px rgba(255, 222, 0, 0.3);
         }
 
-        button#spinBtn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        button#spinBtn:active { transform: translateY(1px); box-shadow: 0 2px 5px rgba(255, 215, 0, 0.3); }
-        button#spinBtn:disabled { background: #555; color: #999; cursor: not-allowed; box-shadow: none; transform: none; }
+        #spinBtn:disabled { background: #444; color: #888; box-shadow: none; }
 
-        /* Responsive cho màn hình lớn hơn (Tablet/PC) */
         @media (min-width: 768px) {
-            .game-container {
-                flex-direction: row;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 50px;
-            }
-            .wheel-wrapper { width: 350px; height: 350px; }
-            h1 { font-size: 2.5rem; }
+            .container { flex-direction: row; justify-content: center; }
         }
     </style>
 </head>
@@ -158,90 +110,128 @@
 
     <h1>🍻 ĐỆ NHẤT TỬU VƯƠNG 🍻</h1>
 
-    <div class="game-container">
-        <div>
-            <div class="wheel-wrapper">
-                <div class="pointer"></div>
-                <div class="wheel-box">
-                    <canvas id="wheelName"></canvas>
-                </div>
-            </div>
-            <div class="wheel-label">Ai là nạn nhân?</div>
+    <div class="container">
+        <div class="wheel-box">
+            <div class="pointer"></div>
+            <canvas id="canvasName"></canvas>
+            <div class="label">Nạn nhân tiếp theo?</div>
         </div>
 
-        <div>
-            <div class="wheel-wrapper">
-                <div class="pointer"></div>
-                <div class="wheel-box">
-                    <canvas id="wheelGift"></canvas>
-                </div>
-            </div>
-            <div class="wheel-label">Số phận ra sao?</div>
+        <div class="wheel-box">
+            <div class="pointer"></div>
+            <canvas id="canvasGift"></canvas>
+            <div class="label">Số phận định đoạt?</div>
         </div>
     </div>
 
-    <div id="result-panel">
-        <div id="final-text" class="waiting">Nhấn nút QUAY để bắt đầu định đoạt!</div>
+    <div id="result-display">
+        <div id="status-text">Đã sẵn sàng! Nhấn QUAY để chơi.</div>
     </div>
 
     <button id="spinBtn">QUAY NGAY</button>
 
     <script>
-        // Danh sách dữ liệu (có thể chỉnh sửa tại đây)
+        // 1. KIỂM TRA SỐ LIỆU: Đầy đủ như yêu cầu
         const names = ["NCT", "A Quả", "C. Lan", "A Thi", "E Chinh", "E Hòa", "E An", "E Chương", "Sơn", "Thao", "KM 1", "KM 2"];
         const gifts = [
-            { label: "Lì xì 20k", color: "#f1c40f", textCol: "#000" },
-            { label: "Uống 1 chén", color: "#c0392b", textCol: "#fff" },
-            { label: "Qua lượt", color: "#3498db", textCol: "#fff" },
-            { label: "Lì xì 10k", color: "#f39c12", textCol: "#000" },
-            { label: "Chỉ định", color: "#8e44ad", textCol: "#fff" },
-            { label: "Uống 2 chén", color: "#d35400", textCol: "#fff" },
-            { label: "Uống 1/2", color: "#e67e22", textCol: "#fff" },
-            { label: "Uống hộ", color: "#16a085", textCol: "#fff" }
+            { label: "Lì xì 20k", color: "#f1c40f" },
+            { label: "Uống 1 chén", color: "#e74c3c" },
+            { label: "Qua lượt", color: "#3498db" },
+            { label: "Lì xì 10k", color: "#f39c12" },
+            { label: "Chỉ định", color: "#8e44ad" },
+            { label: "Uống 2 chén", color: "#c0392b" },
+            { label: "Uống 1/2", color: "#e67e22" },
+            { label: "Uống hộ", color: "#1abc9c" }
         ];
 
-        // Hàm vẽ vòng quay
-        function drawWheel(canvasId, items) {
-            const canvas = document.getElementById(canvasId);
+        let rotName = 0;
+        let rotGift = 0;
+        let isSpinning = false;
+
+        function draw(id, items) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const num = items.length;
-            const arc = (2 * Math.PI) / num;
-            // Tăng độ phân giải cho canvas nét hơn trên mobile
-            canvas.width = 800;
-            canvas.height = 800;
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = canvas.width / 2 - 10; // Trừ viền
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const arc = (Math.PI * 2) / num;
+            
+            canvas.width = 600;
+            canvas.height = 600;
 
             items.forEach((item, i) => {
                 const angle = i * arc;
+                // Vẽ miếng bánh
                 ctx.beginPath();
-                // Màu sắc cho vòng tên (xen kẽ) hoặc màu định sẵn cho vòng quà
-                ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#34495e' : '#2c3e50') : item.color;
-                ctx.moveTo(centerX, centerY);
-                // Vẽ cung tròn từ tâm
-                ctx.arc(centerX, centerY, radius, angle, angle + arc);
-                ctx.lineTo(centerX, centerY);
+                ctx.fillStyle = (typeof item === 'string') ? (i % 2 === 0 ? '#2c3e50' : '#34495e') : item.color;
+                ctx.moveTo(300, 300);
+                ctx.arc(300, 300, 290, angle, angle + arc);
+                ctx.lineTo(300, 300);
                 ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,0.5)";
                 ctx.stroke();
 
-                // Vẽ text
+                // Vẽ chữ
                 ctx.save();
-                ctx.translate(centerX, centerY);
-                // Xoay đến giữa miếng bánh
+                ctx.translate(300, 300);
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
-                ctx.fillStyle = (typeof item === 'string') ? "#ecf0f1" : item.textCol;
-                ctx.font = "bold 32px Arial"; // Font to hơn do canvas phân giải cao
-                // Đẩy text ra gần mép ngoài
-                ctx.fillText(typeof item === 'string' ? item : item.label, radius - 20, 12);
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 28px Arial";
+                const text = (typeof item === 'string') ? item : item.label;
+                ctx.fillText(text, 280, 10);
                 ctx.restore();
             });
         }
 
-        // Biến theo dõi tổng góc quay
-        let currentRotationName = 0;
-        let currentRotationGift = 0;
-        let isSpinning = false;
+        function getWinnerIndex(rotation, count) {
+            const deg = rotation % 360;
+            // Mũi tên ở 12 giờ (270 độ), Canvas bắt đầu vẽ từ 3 giờ (0 độ)
+            const idx = Math.floor(((360 - deg + 270) % 360) / (360 / count));
+            return idx;
+        }
+
+        const btn = document.getElementById('spinBtn');
+        const display = document.getElementById('result-display');
+
+        function startSpin() {
+            if (isSpinning) return;
+            isSpinning = true;
+            btn.disabled = true;
+            display.innerHTML = "Đang quay...";
+
+            // Quay ngẫu nhiên tối thiểu 6-10 vòng
+            const addName = Math.floor(Math.random() * 360) + 2160;
+            const addGift = Math.floor(Math.random() * 360) + 2880;
+
+            rotName += addName;
+            rotGift += addGift;
+
+            document.getElementById('canvasName').style.transform = `rotate(${rotName}deg)`;
+            document.getElementById('canvasGift').style.transform = `rotate(${rotGift}deg)`;
+
+            setTimeout(() => {
+                const nIdx = getWinnerIndex(rotName, names.length);
+                const gIdx = getWinnerIndex(rotGift, gifts.length);
+
+                display.innerHTML = `
+                    <div class="res-name">${names[nIdx]}</div>
+                    <div style="font-size: 0.9rem; color: #888;">nhận ngay</div>
+                    <div class="res-gift">${gifts[gIdx].label}</div>
+                `;
+                
+                isSpinning = false;
+                btn.disabled = false;
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            }, 5100);
+        }
+
+        // Đảm bảo vẽ ngay khi load trang
+        document.addEventListener('DOMContentLoaded', () => {
+            draw('canvasName', names);
+            draw('canvasGift', gifts);
+        });
+
+        btn.onclick = startSpin;
+    </script>
+</body>
+</html>
